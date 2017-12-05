@@ -1,2 +1,2 @@
 # LearningMeteor-TodoApp
-Todo example app built using Meteor with React as the view library
+Todo example app from the Meteor official tutorial with React as the view library
