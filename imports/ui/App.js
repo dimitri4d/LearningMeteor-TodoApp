@@ -3,9 +3,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Tasks } from '../api/tasks.js';
 import ReactDOM from 'react-dom';
 
-
 import Task from './Task.js';
-
 
 //app component
 class App extends Component{
@@ -33,7 +31,7 @@ class App extends Component{
                 <header>
                     <h1>Todo List</h1>
 
-                    <form class="new-task" onSubmit={this.handleSubmit.bind(this)}>
+                    <form className="new-task" onSubmit={this.handleSubmit.bind(this)}>
                         <input type="text" ref="textInput" placeholder="Add new tasks"/>
                     </form>                    
                 </header>
@@ -45,7 +43,6 @@ class App extends Component{
         );
     }
 }
-
 
 export default withTracker(() => {
     return {
