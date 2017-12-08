@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Tasks } from '../api/tasks.js';
 import ReactDOM from 'react-dom';
+import { Meteor } from 'meteor/meteor';
 
 import Task from './Task.js';
+import AccountsUIWrapper from './AccountsUIWrapper.js';
 
 //app component
 class App extends Component{
@@ -20,7 +22,12 @@ class App extends Component{
         const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
         // insert collection
-        Tasks.insert({ text, createdAt: new Date(),});
+        Tasks.insert({ 
+            text, 
+            createdAt: new Date(),
+            owner: Meteor.userId(),
+            username: Meteor.user().username,
+        });
         
         //clear form text
         ReactDOM.findDOMNode(this.refs.textInput).value='';
@@ -51,19 +58,24 @@ class App extends Component{
             <div className="container">
                 <header>
                     <h1>Todo List ({this.props.incompleteCount})</h1>
-                    <label className="hide-completed">
-                    
+                    <label className="hide-completed">                 
                         <input type="checkbox"
                             readOnly
                             checked = {this.state.hideCompleted}
                             onClick = {this.toggleHideCompleted.bind(this)}
                         /> 
                         Hide Completed Tasks
-                    </label> 
+                    </label>
 
+                    <AccountsUIWrapper /> 
+
+                    { this.props.currentUser ?
                     <form className="new-task" onSubmit={this.handleSubmit.bind(this)}>
                         <input type="text" ref="textInput" placeholder="Add new tasks"/>
-                    </form>                    
+
+                    </form> :'' }  
+
+
                 </header>
 
                 <ul>
@@ -74,10 +86,12 @@ class App extends Component{
     }
 }
 
+
 //data container
 export default withTracker(() => {
     return {
         tasks: Tasks.find({},{ sort: {createdAt:-1} }).fetch(),
         incompleteCount: Tasks.find({ checked: {$ne:true} }).count(),
+        currentUser: Meteor.user(),
     };
 })(App);
